@@ -17,6 +17,7 @@
 ## Быстрая проверка
 
 Нужен только установленный Docker. Клонировать репозиторий не обязательно — образы скачаются с Docker Hub.
+Исходники: `git clone https://github.com/gon4idon4i/docker-sro.git`
 
 ```bash
 # СРО 2 — приложение 1: меню утилиты для паролей
@@ -241,4 +242,4 @@ docker rmi abdigani/sapar-local-site:1.0 abdigani/cloud-board:1.0 \
 
 ## Автор
 
-Букебаев Әбдіғани · Docker Hub: [`abdigani`](https://hub.docker.com/u/abdigani)
+Букебаев Әбдіғани · GitHub: [`gon4idon4i`](https://github.com/gon4idon4i) · Docker Hub: [`abdigani`](https://hub.docker.com/u/abdigani)

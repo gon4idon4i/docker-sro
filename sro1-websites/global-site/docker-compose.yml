@@ -1,0 +1,16 @@
+# Локальная проверка перед деплоем на AWS
+# Запуск:    docker compose up -d --build
+# Открыть:   http://localhost:8082
+services:
+  board:
+    build: .
+    image: ${DOCKER_USER:-sro}/cloud-board:1.0
+    container_name: cloud-board
+    ports:
+      - "8082:8080"
+    volumes:
+      - board-data:/data
+    restart: unless-stopped
+
+volumes:
+  board-data:

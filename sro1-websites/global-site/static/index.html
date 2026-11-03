@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Облачная доска</title>
+  <style>
+    :root { --bg:#f4f1ea; --ink:#1d1d1b; --muted:#6b6a64; --card:#fff; --accent:#d9480f; --line:#e2ddd2; }
+    * { box-sizing: border-box; }
+    body { margin:0; background:var(--bg); color:var(--ink); font:16px/1.5 Georgia, "Times New Roman", serif; }
+    .wrap { max-width: 880px; margin: 0 auto; padding: 40px 16px 60px; }
+    h1 { font-size: clamp(34px, 7vw, 56px); margin: 0; }
+    h1 span { color: var(--accent); }
+    .sub { color: var(--muted); margin: 6px 0 32px; font-family: system-ui, sans-serif; }
+    .grid { display:grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap:16px; }
+    .card { background:var(--card); border:1px solid var(--line); border-radius:10px; padding:20px; }
+    .card h2 { margin:0 0 12px; font-size:20px; }
+    dl { margin:0; display:grid; grid-template-columns:auto 1fr; gap:6px 14px; font-family: ui-monospace, Menlo, monospace; font-size:14px; }
+    dt { color:var(--muted); }
+    dd { margin:0; word-break: break-all; }
+    .status { display:inline-block; padding:3px 10px; border-radius:999px; font:600 13px system-ui, sans-serif; }
+    .on-aws { background:#ffe8d9; color:var(--accent); }
+    .off-aws { background:#e9e7e1; color:var(--muted); }
+    form { display:grid; gap:8px; font-family: system-ui, sans-serif; }
+    input, textarea, button { font:inherit; padding:10px; border-radius:8px; border:1px solid var(--line); }
+    textarea { min-height:70px; resize:vertical; }
+    button { background:var(--ink); color:#fff; cursor:pointer; border:0; }
+    button:hover { background:var(--accent); }
+    ul { list-style:none; margin:16px 0 0; padding:0; }
+    li { border-top:1px solid var(--line); padding:10px 0; }
+    li b { font-family: system-ui, sans-serif; }
+    li small { color:var(--muted); font-family: system-ui, sans-serif; }
+    footer { margin-top:40px; color:var(--muted); font: 13px system-ui, sans-serif; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>Облачная <span>доска</span></h1>
+    <p class="sub">Глобальный сайт: Python-сервер в Docker-контейнере на AWS EC2</p>
+
+    <div class="grid">
+      <section class="card">
+        <h2>Где я запущен <span id="where" class="status off-aws">…</span></h2>
+        <dl id="info"></dl>
+      </section>
+
+      <section class="card">
+        <h2>Гостевая книга</h2>
+        <form id="form">
+          <input id="name" maxlength="30" placeholder="Имя">
+          <textarea id="text" maxlength="200" placeholder="Оставьте пару слов" required></textarea>
+          <button>Отправить</button>
+        </form>
+        <ul id="notes"></ul>
+      </section>
+    </div>
+
+    <footer>СРО 1 · сайт №2 (глобальный) · Docker + AWS</footer>
+  </div>
+
+  <script>
+    const $ = (id) => document.getElementById(id);
+
+    function row(k, v) {
+      const dt = document.createElement("dt"); dt.textContent = k;
+      const dd = document.createElement("dd"); dd.textContent = v;
+      $("info").append(dt, dd);
+    }
+
+    async function loadInfo() {
+      const i = await fetch("/api/info").then(r => r.json());
+      $("info").textContent = "";
+      row("контейнер", i.hostname);
+      row("ОС", i.os + " · " + i.arch);
+      row("python", i.python);
+      row("аптайм", Math.floor(i.uptime_sec / 60) + " мин");
+      row("визитов", i.visits);
+      if (i.aws) {
+        $("where").textContent = "AWS EC2";
+        $("where").className = "status on-aws";
+        row("instance", i.aws.instance_id);
+        row("тип", i.aws.instance_type);
+        row("зона", i.aws.zone);
+      } else {
+        $("where").textContent = "локально";
+      }
+    }
+
+    async function loadNotes() {
+      const list = await fetch("/api/notes").then(r => r.json());
+      $("notes").textContent = "";
+      for (const n of list) {
+        const li = document.createElement("li");
+        const b = document.createElement("b"); b.textContent = n.name;
+        const s = document.createElement("small");
+        s.textContent = " · " + new Date(n.time * 1000).toLocaleString("ru-RU");
+        const p = document.createElement("div"); p.textContent = n.text;
+        li.append(b, s, p);
+        $("notes").append(li);
+      }
+    }
+
+    $("form").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      await fetch("/api/notes", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name: $("name").value, text: $("text").value }),
+      });
+      $("text").value = "";
+      loadNotes();
+    });
+
+    loadInfo();
+    loadNotes();
+  </script>
+</body>
+</html>

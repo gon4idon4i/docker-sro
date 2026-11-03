@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Сапар — гид по Казахстану</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="hero">
+    <div class="badge">локальный сайт · nginx в Docker</div>
+    <h1>Сапар</h1>
+    <p class="lead">Пять мест Казахстана, куда стоит поехать хотя бы раз</p>
+  </header>
+
+  <main>
+    <section class="cards">
+      <article class="card">
+        <span class="num">01</span>
+        <h2>Шарынский каньон</h2>
+        <p>Долина замков: красные скалы высотой до 300 м, которые сравнивают с Гранд-Каньоном. 200 км от Алматы.</p>
+        <span class="tag">Алматинская обл.</span>
+      </article>
+      <article class="card">
+        <span class="num">02</span>
+        <h2>Озеро Кольсай</h2>
+        <p>Три горных озера на высоте 1800–2850 м среди тяньшанских елей. Лучшее время — июнь–сентябрь.</p>
+        <span class="tag">Алматинская обл.</span>
+      </article>
+      <article class="card">
+        <span class="num">03</span>
+        <h2>Бурабай</h2>
+        <p>«Казахстанская Швейцария»: сосновый бор, скала Окжетпес и легенды про хана Абылая.</p>
+        <span class="tag">Акмолинская обл.</span>
+      </article>
+      <article class="card">
+        <span class="num">04</span>
+        <h2>Туркестан</h2>
+        <p>Мавзолей Ходжи Ахмеда Ясави XIV века — объект Всемирного наследия ЮНЕСКО.</p>
+        <span class="tag">Туркестанская обл.</span>
+      </article>
+      <article class="card">
+        <span class="num">05</span>
+        <h2>Поющий бархан</h2>
+        <p>Песчаная дюна в парке Алтын-Эмель, которая в сухую погоду гудит, как орган.</p>
+        <span class="tag">Алматинская обл.</span>
+      </article>
+    </section>
+
+    <section class="info">
+      <h2>Как этот сайт запущен</h2>
+      <table>
+        <tr><td>Веб-сервер</td><td>nginx 1.27 (alpine)</td></tr>
+        <tr><td>Конфигурация</td><td>свой <code>nginx.conf</code>: gzip, кэш статики, своя 404, <code>/health</code></td></tr>
+        <tr><td>Запуск</td><td><code>docker compose up -d</code></td></tr>
+        <tr><td>Адрес</td><td><code>http://localhost:8081</code></td></tr>
+      </table>
+      <p class="hint">Проверка здоровья: <a href="/health">/health</a> · несуществующая страница: <a href="/nowhere">/nowhere</a></p>
+    </section>
+  </main>
+
+  <footer>СРО 1 · сайт №1 (локальный) · Docker</footer>
+</body>
+</html>

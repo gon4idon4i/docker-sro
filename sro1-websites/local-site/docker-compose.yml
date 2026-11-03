@@ -1,0 +1,11 @@
+# Запуск:    docker compose up -d --build
+# Открыть:   http://localhost:8081
+# Остановка: docker compose down
+services:
+  site:
+    build: .
+    image: ${DOCKER_USER:-sro}/sapar-local-site:1.0
+    container_name: sapar-local
+    ports:
+      - "8081:80"
+    restart: unless-stopped

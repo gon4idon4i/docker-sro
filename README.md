@@ -33,7 +33,7 @@ docker run -d --name sapar -p 8081:80 abdigani/sapar-local-site:1.0
 docker run -d --name board -p 8082:8080 abdigani/cloud-board:1.0
 ```
 
-Глобальная версия сайта 2 на AWS: **http://__AWS_IP__** (адрес появится после деплоя)
+Глобальная версия сайта 2 на AWS: **http://3.75.222.220** (EC2 `t3.micro`, регион Frankfurt `eu-central-1`)
 
 ---
 
@@ -59,6 +59,8 @@ docker ps                         # STATUS: Up ... (healthy)
 curl localhost:8081/health        # ok
 docker compose down               # остановка
 ```
+
+![Локальный сайт](screenshots/01-local-site.jpg)
 
 ### Сайт №2 — глобальный, через AWS
 
@@ -91,6 +93,16 @@ docker compose up -d --build      # http://localhost:8082
 6. **Launch instance**, подождать 1–2 минуты, открыть `http://<Public IPv4 address>`.
 
 Плашка «AWS EC2» на странице и `instance-id` подтверждают, что сайт работает на сервере Amazon.
+
+Рабочий адрес: **http://3.75.222.220**
+
+![Сайт на AWS EC2](screenshots/02-aws-site.jpg)
+
+```bash
+curl http://3.75.222.220/api/info
+# {"hostname": "8ec6936c7425", "os": "Linux 6.18.56-125.164.amzn2023.x86_64", "arch": "x86_64",
+#  "aws": {"instance_id": "i-0a0fefd03da3a556b", "instance_type": "t3.micro", "zone": "eu-central-1a"}, ...}
+```
 
 Проверка по SSH (необязательно):
 
@@ -227,7 +239,7 @@ docker-sro/
 │   ├── passkit/             # приложение 1: утилита для паролей (Python)
 │   └── docker-quiz/         # приложение 2: викторина (Go, FROM scratch)
 ├── scripts/publish.sh       # сборка amd64+arm64 и push на Docker Hub
-└── screenshots/
+└── screenshots/             # скриншоты сайтов
 ```
 
 ---
